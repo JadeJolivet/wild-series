@@ -22,13 +22,36 @@ const programs = [
       year: 2017,
     },
   ];
-  
+    
   // Declare the action
   
   const browse = (req, res) => {
-    res.json(programs);
+    if (req.query.q != null) {
+      const filteredPrograms = programs.filter((program) =>
+        program.synopsis.includes(req.query.q)
+      );
+  
+      res.json(filteredPrograms);
+    } else {
+      res.json(programs);
+    }
   };
+
+  const read = (req, res) => {
+    const parsedId = parseInt(req.params.id, 10);
+  
+    const program = programs.find((p) => p.id === parsedId);
+  
+    if (program != null) {
+      res.json(program);
+    } else {
+      res.sendStatus(404);
+    }
+  };
+  
+  
   
   // Export it to import it somewhere else
   
-  module.exports = { browse };
+  module.exports = { browse, read};
+  
